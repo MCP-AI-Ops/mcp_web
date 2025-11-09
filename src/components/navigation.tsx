@@ -25,7 +25,7 @@ export function Navigation() {
               <div className="h-8 w-8 rounded-lg gradient-primary flex items-center justify-center">
                 <span className="text-white font-bold text-lg">A</span>
               </div>
-              <span className="text-xl font-bold text-foreground">Aolda Cloud</span>
+              <span className="text-xl font-bold text-foreground">Launcha Cloud</span>
             </div>
 
             {/* Navigation Links */}
@@ -111,7 +111,7 @@ export function Navigation() {
                   <div className="flex flex-col space-y-1">
                     <p className="text-sm font-medium leading-none">Developer</p>
                     <p className="text-xs leading-none text-muted-foreground">
-                      developer@aolda.cloud
+                      developer@Launcha.cloud
                     </p>
                   </div>
                 </DropdownMenuLabel>

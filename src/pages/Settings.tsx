@@ -62,12 +62,12 @@ export default function Settings() {
                 
                 <div className="space-y-2">
                   <Label htmlFor="email">Email Address</Label>
-                  <Input id="email" type="email" defaultValue="developer@aolda.cloud" />
+                  <Input id="email" type="email" defaultValue="developer@Launcha.cloud" />
                 </div>
                 
                 <div className="space-y-2">
                   <Label htmlFor="company">Company</Label>
-                  <Input id="company" defaultValue="Aolda Technologies" />
+                  <Input id="company" defaultValue="Launcha Technologies" />
                 </div>
 
                 <Button variant="hero">
@@ -234,7 +234,7 @@ export default function Settings() {
                     <div className="space-y-3">
                       <div className="flex items-center justify-between p-3 border border-border rounded-lg">
                         <div>
-                          <p className="font-medium font-mono">aolda_*****************************</p>
+                          <p className="font-medium font-mono">Launcha_*****************************</p>
                           <p className="text-sm text-muted-foreground">Created 2 days ago</p>
                         </div>
                         <Button variant="outline" size="sm">

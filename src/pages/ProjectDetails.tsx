@@ -38,7 +38,7 @@ export default function ProjectDetails() {
     name: "E-commerce API",
     repository: "https://github.com/company/ecommerce-api",
     status: "deployed",
-    url: "https://api.ecommerce.aolda.cloud",
+    url: "https://api.ecommerce.Launcha.cloud",
     currentResources: {
       cpu: "2 cores",
       ram: "4 GB",

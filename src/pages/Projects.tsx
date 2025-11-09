@@ -44,7 +44,7 @@ const mockProjects: Project[] = [
     repository: "https://github.com/company/ecommerce-api",
     status: "deployed",
     lastDeployment: "2 hours ago",
-    url: "https://api.ecommerce.aolda.cloud"
+    url: "https://api.ecommerce.Launcha.cloud"
   },
   {
     id: "2",
@@ -59,7 +59,7 @@ const mockProjects: Project[] = [
     repository: "https://github.com/company/payment-gateway",
     status: "deployed",
     lastDeployment: "1 day ago",
-    url: "https://payment.aolda.cloud"
+    url: "https://payment.Launcha.cloud"
   },
   {
     id: "4",
@@ -74,7 +74,7 @@ const mockProjects: Project[] = [
     repository: "https://github.com/company/auth-service",
     status: "deployed",
     lastDeployment: "6 hours ago",
-    url: "https://auth.aolda.cloud"
+    url: "https://auth.Launcha.cloud"
   },
   {
     id: "6",
