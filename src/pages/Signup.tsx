@@ -1,55 +1,107 @@
-// src/pages/Signup.tsx
+import { useState } from "react"
+import { useNavigate, Link } from "react-router-dom"
+import { authApi } from "@/lib/authAPI"
+import { useAuth } from "@/contexts/AuthContext"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Alert, AlertDescription } from "@/components/ui/alert"
+import { AlertCircle } from "lucide-react"
 
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { authApi } from "../lib/authAPI";
-import { useAuth } from "../contexts/AuthContext";
-
-const Signup: React.FC = () => {
-  const { login } = useAuth();
-  const navigate = useNavigate();
+export default function Signup() {
+  const { login } = useAuth()
+  const navigate = useNavigate()
   const [formData, setFormData] = useState({
     email: "",
     password: "",
-    github_repo_url: "",
-    primary_usage_time: "",
-    expected_users: 0,
-  });
-  const [error, setError] = useState("");
+  })
+  const [error, setError] = useState("")
+  const [isLoading, setIsLoading] = useState(false)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
+    const { name, value } = e.target
+    setFormData((prev) => ({ ...prev, [name]: value }))
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+    e.preventDefault()
+    setError("")
+    setIsLoading(true)
+
     try {
-      await authApi.signup(formData);
-      const res = await authApi.login(formData.email, formData.password);
-      login(res.access_token, formData.email);
-      navigate("/predict");
+      // 회원가입 시 기본값으로 프로젝트 정보 전송 (나중에 프로젝트 생성에서 업데이트 가능)
+      await authApi.signup({
+        email: formData.email,
+        password: formData.password,
+        github_repo_url: "https://github.com/user/repo", // 기본값, 나중에 업데이트
+        expected_users: 100, // 기본값, 나중에 업데이트
+      })
+      const res = await authApi.login(formData.email, formData.password)
+      login(res.access_token, formData.email)
+      navigate("/predict")
     } catch (err: any) {
-      setError(err.message || "Signup failed");
+      setError(err.message || "회원가입에 실패했습니다.")
+    } finally {
+      setIsLoading(false)
     }
-  };
+  }
 
   return (
-    <div className="p-8 max-w-md mx-auto">
-      <h2 className="text-2xl font-bold mb-4">회원가입</h2>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <input name="email" type="email" required placeholder="이메일" value={formData.email} onChange={handleChange} className="w-full border px-3 py-2 rounded" />
-        <input name="password" type="password" required placeholder="비밀번호" value={formData.password} onChange={handleChange} className="w-full border px-3 py-2 rounded" />
-        <input name="github_repo_url" type="url" required placeholder="GitHub Repo URL" value={formData.github_repo_url} onChange={handleChange} className="w-full border px-3 py-2 rounded" />
-        <input name="primary_usage_time" required placeholder="주 사용 시간대" value={formData.primary_usage_time} onChange={handleChange} className="w-full border px-3 py-2 rounded" />
-        <input name="expected_users" type="number" required placeholder="예상 사용자 수" value={formData.expected_users} onChange={handleChange} className="w-full border px-3 py-2 rounded" />
-        {error && <p className="text-red-500 text-sm">{error}</p>}
-        <button type="submit" className="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700">
-          회원가입
-        </button>
-      </form>
+    <div className="min-h-screen flex items-center justify-center px-4 py-12">
+      <Card className="w-full max-w-md shadow-card">
+        <CardHeader className="space-y-1">
+          <CardTitle className="text-2xl font-bold text-center">회원가입</CardTitle>
+          <CardDescription className="text-center">
+            LaunchA에 가입하여 예측 서비스를 시작하세요
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="email">이메일</Label>
+              <Input
+                id="email"
+                name="email"
+                type="email"
+                placeholder="your@email.com"
+                value={formData.email}
+                onChange={handleChange}
+                required
+                disabled={isLoading}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="password">비밀번호</Label>
+              <Input
+                id="password"
+                name="password"
+                type="password"
+                placeholder="••••••••"
+                value={formData.password}
+                onChange={handleChange}
+                required
+                disabled={isLoading}
+              />
+            </div>
+            {error && (
+              <Alert variant="destructive">
+                <AlertCircle className="h-4 w-4" />
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
+            )}
+            <Button type="submit" className="w-full" disabled={isLoading}>
+              {isLoading ? "가입 중..." : "회원가입"}
+            </Button>
+          </form>
+          <div className="mt-4 text-center text-sm text-muted-foreground">
+            이미 계정이 있으신가요?{" "}
+            <Link to="/login" className="text-primary hover:underline">
+              로그인
+            </Link>
+          </div>
+        </CardContent>
+      </Card>
     </div>
-  );
-};
-
-export default Signup;
+  )
+}

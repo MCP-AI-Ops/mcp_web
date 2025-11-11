@@ -9,14 +9,27 @@ import { Navigation } from "@/components/navigation";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Predict from "./pages/Predict";
-import NotFound from "./pages/NotFound";
+import Projects from "./pages/Projects";
+import Settings from "./pages/Settings";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 1,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
   const { state } = useAuth();
-  return state.token ? <>{children}</> : <Navigate to="/login" />;
+  return state.token ? <>{children}</> : <Navigate to="/login" replace />;
+};
+
+const PublicRoute = ({ children }: { children: React.ReactNode }) => {
+  const { state } = useAuth();
+  return state.token ? <Navigate to="/predict" replace /> : <>{children}</>;
 };
 
 const App = () => (
@@ -30,11 +43,23 @@ const App = () => (
             <div className="min-h-screen bg-background">
               <Navigation />
               <Routes>
-                
-                <Route path="/" element={<Navigate to="/login" />} />
-                
-                <Route path="/login" element={<Login />} />
-                <Route path="/signup" element={<Signup />} />
+                <Route path="/" element={<Navigate to="/predict" replace />} />
+                <Route
+                  path="/login"
+                  element={
+                    <PublicRoute>
+                      <Login />
+                    </PublicRoute>
+                  }
+                />
+                <Route
+                  path="/signup"
+                  element={
+                    <PublicRoute>
+                      <Signup />
+                    </PublicRoute>
+                  }
+                />
                 <Route
                   path="/predict"
                   element={
@@ -43,8 +68,23 @@ const App = () => (
                     </PrivateRoute>
                   }
                 />
-                
-                <Route path="*" element={<NotFound />} />
+                <Route
+                  path="/projects"
+                  element={
+                    <PrivateRoute>
+                      <Projects />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="/settings"
+                  element={
+                    <PrivateRoute>
+                      <Settings />
+                    </PrivateRoute>
+                  }
+                />
+                <Route path="*" element={<Navigate to="/predict" replace />} />
               </Routes>
             </div>
           </BrowserRouter>

@@ -44,7 +44,7 @@ const mockProjects: Project[] = [
     repository: "https://github.com/company/ecommerce-api",
     status: "deployed",
     lastDeployment: "2 hours ago",
-    url: "https://api.ecommerce.Launcha.cloud"
+    url: "https://api.ecommerce.LaunchA.cloud"
   },
   {
     id: "2",
@@ -59,7 +59,7 @@ const mockProjects: Project[] = [
     repository: "https://github.com/company/payment-gateway",
     status: "deployed",
     lastDeployment: "1 day ago",
-    url: "https://payment.Launcha.cloud"
+    url: "https://payment.LaunchA.cloud"
   },
   {
     id: "4",
@@ -74,7 +74,7 @@ const mockProjects: Project[] = [
     repository: "https://github.com/company/auth-service",
     status: "deployed",
     lastDeployment: "6 hours ago",
-    url: "https://auth.Launcha.cloud"
+    url: "https://auth.LaunchA.cloud"
   },
   {
     id: "6",
@@ -126,7 +126,6 @@ export default function Projects() {
   }
 
   const handleCreateProject = () => {
-    // Here you would typically make an API call to create the project
     console.log("Creating project:", newProject)
     setIsCreateDialogOpen(false)
     setNewProject({ name: "", repository: "" })
@@ -283,3 +282,4 @@ export default function Projects() {
     </div>
   )
 }
+

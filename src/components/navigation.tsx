@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,11 +9,35 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { useTheme } from "@/components/theme-provider"
-import { Moon, Sun, Monitor, LogOut, Settings, User } from "lucide-react"
-import { NavLink } from "react-router-dom"
+import { useAuth } from "@/contexts/AuthContext"
+import { useNavigate, NavLink } from "react-router-dom"
+import { Moon, Sun, Monitor, LogOut } from "lucide-react"
 
 export function Navigation() {
   const { theme, setTheme } = useTheme()
+  const { state, logout } = useAuth()
+  const navigate = useNavigate()
+
+  const handleLogout = () => {
+    logout()
+    navigate("/login")
+  }
+
+  // 인증되지 않은 사용자에게는 네비게이션을 표시하지 않음
+  if (!state.token) {
+    return null
+  }
+
+  const getInitials = (email: string | null) => {
+    if (!email) return "U"
+    return email
+      .split("@")[0]
+      .split(".")
+      .map((n) => n[0])
+      .join("")
+      .toUpperCase()
+      .slice(0, 2)
+  }
 
   return (
     <nav className="border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -25,13 +49,13 @@ export function Navigation() {
               <div className="h-8 w-8 rounded-lg gradient-primary flex items-center justify-center">
                 <span className="text-white font-bold text-lg">A</span>
               </div>
-              <span className="text-xl font-bold text-foreground">Launcha Cloud</span>
+              <span className="text-xl font-bold text-foreground">LaunchA Cloud</span>
             </div>
 
             {/* Navigation Links */}
             <div className="hidden md:flex items-center space-x-6">
               <NavLink 
-                to="/" 
+                to="/predict" 
                 className={({ isActive }) => 
                   `text-sm font-medium transition-smooth px-3 py-2 rounded-md ${
                     isActive 
@@ -101,31 +125,21 @@ export function Navigation() {
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="relative h-8 w-8 rounded-full">
                   <Avatar className="h-8 w-8">
-                    <AvatarImage src="/placeholder-user.jpg" alt="User" />
-                    <AvatarFallback>DV</AvatarFallback>
+                    <AvatarFallback>{getInitials(state.email)}</AvatarFallback>
                   </Avatar>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-56" align="end" forceMount>
                 <DropdownMenuLabel className="font-normal">
                   <div className="flex flex-col space-y-1">
-                    <p className="text-sm font-medium leading-none">Developer</p>
+                    <p className="text-sm font-medium leading-none">User</p>
                     <p className="text-xs leading-none text-muted-foreground">
-                      developer@Launcha.cloud
+                      {state.email || "user@example.com"}
                     </p>
                   </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>
-                  <User className="mr-2 h-4 w-4" />
-                  <span>Profile</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Settings className="mr-2 h-4 w-4" />
-                  <span>Settings</span>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>
+                <DropdownMenuItem onClick={handleLogout}>
                   <LogOut className="mr-2 h-4 w-4" />
                   <span>Log out</span>
                 </DropdownMenuItem>
