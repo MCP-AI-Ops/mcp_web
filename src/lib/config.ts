@@ -5,8 +5,8 @@
  * 프로덕션: Vercel 환경 변수에서 EC2 IP/도메인 설정 필요
  * 
  * Vercel 환경 변수 설정:
- * - VITE_API_BASE_URL: http://ec2-ip:8000 또는 https://api.domain.com
- * - VITE_DEPLOY_API_BASE_URL: http://ec2-ip:8001 또는 https://deploy.domain.com
+ * - VITE_API_BASE_URL: https://api.launcha.cloud
+ * - VITE_DEPLOY_API_BASE_URL: https://deploy.launcha.cloud
  */
 
 // 일반 백엔드 API URL (8000 포트)
