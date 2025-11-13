@@ -66,3 +66,4 @@ export function MetricCard({ title, value, change, icon, className }: MetricCard
     </Card>
   )
 }
+
