@@ -1,6 +1,6 @@
 // src/lib/mcpAPI.ts
 
-import { API_BASE_URL } from './config';
+import { API_BASE_URL, DEPLOY_API_BASE_URL } from './config';
 
 const handleResponse = async (res: Response) => {
   if (!res.ok) {
@@ -50,14 +50,14 @@ export const mcpApi = {
     return handleResponse(res);
   },
 
-  // 배포 요청
+  // 배포 요청 (8001 포트 사용)
   deploy: async (deployData: {
     service_id: string;
     repo_id?: string;
     image_tag?: string;
     env_config?: Record<string, any>;
   }, token: string) => {
-    const res = await fetch(`${API_BASE_URL}/deploy`, {
+    const res = await fetch(`${DEPLOY_API_BASE_URL}/deploy`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
