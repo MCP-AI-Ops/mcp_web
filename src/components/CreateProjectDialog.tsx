@@ -86,7 +86,7 @@ export function CreateProjectDialog({ open, onOpenChange, onSubmit }: CreateProj
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="requirements">요청사항 (자연어)</Label>
+              <Label htmlFor="requirements">요청사항</Label>
               <Textarea
                 id="requirements"
                 name="requirements"
