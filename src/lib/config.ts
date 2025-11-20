@@ -6,14 +6,14 @@
  * 
  * Vercel 환경 변수 설정:
  * - VITE_API_BASE_URL: https://api.launcha.cloud
- * - VITE_DEPLOY_API_BASE_URL: https://deploy.launcha.cloud
+ * - VITE_DEPLOY_API_BASE_URL: https://api.launcha.cloud
  * - VITE_BACKEND_API_BASE_URL: https://backend.launcha.cloud (backend_api용)
  */
 
 const isBrowser = typeof window !== "undefined";
 const runtimeOrigin = isBrowser ? window.location.origin : undefined;
 const PROD_DEFAULT_API = "https://api.launcha.cloud";
-const PROD_DEFAULT_DEPLOY = "https://deploy.launcha.cloud";
+const PROD_DEFAULT_DEPLOY = "https://api.launcha.cloud";
 const isProdEnv = Boolean(import.meta.env.PROD);
 const isDev = !isProdEnv;
 
@@ -27,9 +27,9 @@ export const API_BASE_URL =
 
 // MCP 배포 요청 전용 API URL (deploy_main - 8001 포트)
 // 로컬 개발: http://localhost:8001
-// 프로덕션: VITE_DEPLOY_API_BASE_URL → 없으면 deploy.launcha.cloud
+// 프로덕션: VITE_DEPLOY_API_BASE_URL → 없으면 api.launcha.cloud
 export const DEPLOY_API_BASE_URL =
-  import.meta.env.VITE_DEPLOY_API_BASE_URL ||
+  import.meta.env.VITE_API_BASE_URL ||
   (isDev ? "http://localhost:8001" : PROD_DEFAULT_DEPLOY);
 
 // 자연어 → MCPContext 변환을 담당하는 backend_api 서버 URL

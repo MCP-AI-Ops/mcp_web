@@ -22,19 +22,8 @@ export default function Predict() {
     }
 
     try {
-      // 1. 프로젝트 정보를 사용자 프로필에 저장
-      try {
-        await authApi.updateProfile(
-          {
-            github_repo_url: projectData.github_repo_url,
-            requirements: projectData.requirements,
-          },
-          state.token
-        )
-      } catch (apiError: any) {
-        // API가 없으면 로컬 스토리지에 저장
-        localStorage.setItem("project_data", JSON.stringify(projectData))
-      }
+      // 1. (임시) 프로필 API는 사용하지 않고, 프로젝트 정보를 로컬 스토리지에만 저장
+      localStorage.setItem("project_data", JSON.stringify(projectData))
 
       // 2. service_id 생성 (로깅/추적용)
       const serviceId = `svc-${Date.now()}`
