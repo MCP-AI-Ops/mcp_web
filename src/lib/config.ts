@@ -10,20 +10,34 @@
  * - VITE_BACKEND_API_BASE_URL: https://backend.launcha.cloud (backend_api용)
  */
 
+const isBrowser = typeof window !== "undefined";
+const runtimeOrigin = isBrowser ? window.location.origin : undefined;
+const PROD_DEFAULT_API = "https://api.launcha.cloud";
+const PROD_DEFAULT_DEPLOY = "https://deploy.launcha.cloud";
+const isProdEnv = Boolean(import.meta.env.PROD);
+const isDev = !isProdEnv;
+
 // MCP Core API URL (plans, auth 등 - 8000 포트)
 // 로컬 개발: http://localhost:8000
-// 프로덕션: 환경 변수로 EC2 IP/도메인 설정 필수
-export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+// 프로덕션: VITE_API_BASE_URL → 없다면 현재 Origin(또는 api.launcha.cloud) 사용
+
+export const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL ||
+  (isDev ? "http://localhost:8000" : runtimeOrigin || PROD_DEFAULT_API);
 
 // MCP 배포 요청 전용 API URL (deploy_main - 8001 포트)
 // 로컬 개발: http://localhost:8001
-// 프로덕션: 환경 변수로 EC2 IP/도메인 설정 필수
-export const DEPLOY_API_BASE_URL = import.meta.env.VITE_DEPLOY_API_BASE_URL || 'http://localhost:8001';
+// 프로덕션: VITE_DEPLOY_API_BASE_URL → 없으면 deploy.launcha.cloud
+export const DEPLOY_API_BASE_URL =
+  import.meta.env.VITE_DEPLOY_API_BASE_URL ||
+  (isDev ? "http://localhost:8001" : PROD_DEFAULT_DEPLOY);
 
 // 자연어 → MCPContext 변환을 담당하는 backend_api 서버 URL
-// 로컬 개발: http://localhost:8001 (예시)
-// 프로덕션: VITE_BACKEND_API_BASE_URL로 별도 설정
-export const BACKEND_API_BASE_URL = import.meta.env.VITE_BACKEND_API_BASE_URL || 'http://localhost:8001';
+// 로컬 개발: http://localhost:8001
+// 프로덕션: VITE_BACKEND_API_BASE_URL → 없으면 API_BASE_URL과 동일한 Origin 사용
+export const BACKEND_API_BASE_URL =
+  import.meta.env.VITE_BACKEND_API_BASE_URL ||
+  (isDev ? "http://localhost:8001" : API_BASE_URL);
 
 // 프로덕션 환경에서 환경 변수 미설정 시 경고
 if (import.meta.env.PROD) {
