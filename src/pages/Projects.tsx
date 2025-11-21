@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -41,63 +41,51 @@ import {
   Globe
 } from "lucide-react"
 
-// 목 데이터: 테스트용 프로젝트
-const mockProject: Project = {
-  id: 1,
-  name: "My Awesome Project",
-  repository: "https://github.com/username/my-awesome-project",
-  status: "deployed",
-  lastDeployment: new Date().toISOString(),
-  url: "https://my-awesome-project.example.com",
-  service_id: "svc-12345",
-  instance_id: "inst-67890"
-}
-
 export default function Projects() {
   const { state } = useAuth()
   const { toast } = useToast()
   const [searchQuery, setSearchQuery] = useState("")
-  const [projects, setProjects] = useState<Project[]>([mockProject]) // 목 데이터로 초기화
-  const [isLoading, setIsLoading] = useState(false) // 목 데이터 사용 시 로딩 불필요
+  const [projects, setProjects] = useState<Project[]>([])
+  const [isLoading, setIsLoading] = useState(false)
   const [isDeleting, setIsDeleting] = useState<number | null>(null)
   const [selectedProject, setSelectedProject] = useState<Project | null>(null)
   const [isDetailDialogOpen, setIsDetailDialogOpen] = useState(false)
 
   // 프로젝트 목록 로드
-  const loadProjects = async () => {
-    // 목 데이터 사용 중 (테스트용)
-    setProjects([mockProject])
-    setIsLoading(false)
-    
-    // 실제 API 호출 (주석 처리됨)
-    // if (!state.token) {
-    //   setIsLoading(false)
-    //   return
-    // }
+  const loadProjects = useCallback(async () => {
+    if (!state.token) {
+      setProjects([])
+      setIsLoading(false)
+      return
+    }
 
-    // setIsLoading(true)
-    // try {
-    //   const response = await projectsApi.getProjects(state.token)
-    //   setProjects(response.projects)
-    // } catch (err: any) {
-    //   toast({
-    //     title: "프로젝트 로드 실패",
-    //     description: err.message || "프로젝트 목록을 불러오는데 실패했습니다.",
-    //     variant: "destructive"
-    //   })
-    // } finally {
-    //   setIsLoading(false)
-    // }
-  }
+    setIsLoading(true)
+    try {
+      const response = await projectsApi.getProjects(state.token)
+      setProjects(response.projects ?? [])
+    } catch (err: any) {
+      setProjects([])
+      toast({
+        title: "프로젝트 로드 실패",
+        description: err.message || "프로젝트 목록을 불러오는데 실패했습니다.",
+        variant: "destructive"
+      })
+    } finally {
+      setIsLoading(false)
+    }
+  }, [state.token, toast])
 
   useEffect(() => {
     loadProjects()
-  }, [state.token])
+  }, [loadProjects])
 
-  const filteredProjects = projects.filter(project =>
-    project.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    project.repository.toLowerCase().includes(searchQuery.toLowerCase())
-  )
+  const filteredProjects = projects.filter(project => {
+    const query = searchQuery.toLowerCase()
+    return (
+      project.name.toLowerCase().includes(query) ||
+      project.repository.toLowerCase().includes(query)
+    )
+  })
 
   const getStatusIcon = (status: string) => {
     switch (status) {
