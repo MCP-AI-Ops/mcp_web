@@ -7,6 +7,7 @@ on:
 
 jobs:
   sync-fork:
+    if: github.repository == 'MCP-AI-Ops/mcp_web'  # 조직 레포인지 확인
     runs-on: ubuntu-latest
     permissions:
       contents: read  # 조직 레포 읽을 권한만 사용 (실제 push는 PAT로)
