@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { useAuth } from "@/contexts/AuthContext"
-import { mcpApi } from "@/lib/mcpAPI"
+import { mcpApi, projectsApi } from "@/lib/mcpAPI"
 import { backendApi } from "@/lib/backendAPI"
 import { CreateProjectDialog, ProjectData } from "@/components/CreateProjectDialog"
 import { DeploymentSummaryDialog, DeploymentSummaryData } from "@/components/DeploymentSummaryDialog"
@@ -52,6 +52,32 @@ export default function Predict() {
       }
 
       const deployResponse = await mcpApi.deploy(deployData, state.token)
+      const repoSlug = projectData.github_repo_url.replace(/\/$/, "").split("/").pop() || projectData.github_repo_url
+      const lastDeployment = deployResponse.deployed_at || new Date().toISOString()
+
+      try {
+        if (state.token) {
+          await projectsApi.createProject(
+            {
+              name: repoSlug,
+              repository: projectData.github_repo_url,
+              status: deployResponse.accepted ? "deployed" : "error",
+              lastDeployment,
+              url: deployResponse.instance?.metadata?.public_url ?? null,
+              service_id: serviceId,
+              instance_id: deployResponse.instance_id ?? null,
+            },
+            state.token
+          )
+        }
+      } catch (projectErr: any) {
+        console.warn("Failed to create project record", projectErr)
+        toast({
+          title: "프로젝트 기록 저장 실패",
+          description: projectErr.message || "생성된 프로젝트 정보를 저장하지 못했습니다.",
+          variant: "destructive",
+        })
+      }
       const summaryPayload: DeploymentSummaryData = {
         githubUrl: projectData.github_repo_url,
         serviceId,

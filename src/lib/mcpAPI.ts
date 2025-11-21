@@ -129,6 +129,8 @@ export interface Project {
   url: string | null;
   service_id: string | null;
   instance_id: string | null;
+  created_at?: string;
+  updated_at?: string;
 }
 
 export interface ProjectsResponse {
@@ -151,6 +153,11 @@ export const projectsApi = {
   createProject: async (projectData: {
     name: string;
     repository: string;
+    status?: "deployed" | "building" | "error" | "stopped";
+    lastDeployment?: string | null;
+    url?: string | null;
+    service_id?: string | null;
+    instance_id?: string | null;
   }, token: string): Promise<Project> => {
     const res = await fetch(`${API_BASE_URL}/projects`, {
       method: 'POST',
