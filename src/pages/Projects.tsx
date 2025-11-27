@@ -47,48 +47,12 @@ const MOCK_PROJECTS: Project[] = [
     name: "fastapi",
     repository: "https://github.com/fastapi/fastapi",
     status: "deployed",
-    lastDeployment: "2025-11-20T09:30:00Z",
+    lastDeployment: "2025-11-28T09:47:00Z",
     url: "https://retail.launcha.cloud",
-    service_id: "svc-smart-retail",
-    instance_id: "inst-smart-retail",
+    service_id: "test-service-id",
+    instance_id: "m1.medium",
     created_at: "2025-10-05T14:12:00Z",
     updated_at: "2025-11-24T08:45:00Z"
-  },
-  {
-    id: 102,
-    name: "Edge Logistics Tracker",
-    repository: "https://github.com/launcha/edge-logistics-tracker",
-    status: "building",
-    lastDeployment: "2025-11-21T04:15:00Z",
-    url: null,
-    service_id: "svc-edge-logistics",
-    instance_id: "inst-edge-logistics",
-    created_at: "2025-10-18T02:22:00Z",
-    updated_at: "2025-11-26T01:10:00Z"
-  },
-  {
-    id: 103,
-    name: "Vision Inspection Portal",
-    repository: "https://github.com/launcha/vision-inspection-portal",
-    status: "error",
-    lastDeployment: "2025-11-17T13:05:00Z",
-    url: "https://vision.launcha.cloud",
-    service_id: "svc-vision-portal",
-    instance_id: "inst-vision-portal",
-    created_at: "2025-09-30T09:32:00Z",
-    updated_at: "2025-11-24T03:18:00Z"
-  },
-  {
-    id: 104,
-    name: "AI Forecasting Sandbox",
-    repository: "https://github.com/launcha/ai-forecasting-sandbox",
-    status: "stopped",
-    lastDeployment: null,
-    url: null,
-    service_id: "svc-forecasting",
-    instance_id: null,
-    created_at: "2025-09-12T07:22:00Z",
-    updated_at: "2025-11-10T11:55:00Z"
   }
 ]
 
