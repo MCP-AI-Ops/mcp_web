@@ -47,7 +47,7 @@ const MOCK_PROJECTS: Project[] = [
     name: "fastapi",
     repository: "https://github.com/fastapi/fastapi",
     status: "deployed",
-    lastDeployment: "2025-11-28T09:47:00Z",
+    lastDeployment: "2025-11-28T09:52:00+09:00",
     url: "https://retail.launcha.cloud",
     service_id: "test-service-id",
     instance_id: "m1.medium",
