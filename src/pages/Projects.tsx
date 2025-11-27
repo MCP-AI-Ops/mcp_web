@@ -41,62 +41,11 @@ import {
   Globe
 } from "lucide-react"
 
-const MOCK_PROJECTS: Project[] = [
-  {
-    id: 101,
-    name: "Smart Retail Assistant",
-    repository: "https://github.com/launcha/smart-retail-assistant",
-    status: "deployed",
-    lastDeployment: "2025-11-20T09:30:00Z",
-    url: "https://retail.launcha.cloud",
-    service_id: "svc-smart-retail",
-    instance_id: "inst-smart-retail",
-    created_at: "2025-10-05T14:12:00Z",
-    updated_at: "2025-11-24T08:45:00Z"
-  },
-  {
-    id: 102,
-    name: "Edge Logistics Tracker",
-    repository: "https://github.com/launcha/edge-logistics-tracker",
-    status: "building",
-    lastDeployment: "2025-11-21T04:15:00Z",
-    url: null,
-    service_id: "svc-edge-logistics",
-    instance_id: "inst-edge-logistics",
-    created_at: "2025-10-18T02:22:00Z",
-    updated_at: "2025-11-26T01:10:00Z"
-  },
-  {
-    id: 103,
-    name: "Vision Inspection Portal",
-    repository: "https://github.com/launcha/vision-inspection-portal",
-    status: "error",
-    lastDeployment: "2025-11-17T13:05:00Z",
-    url: "https://vision.launcha.cloud",
-    service_id: "svc-vision-portal",
-    instance_id: "inst-vision-portal",
-    created_at: "2025-09-30T09:32:00Z",
-    updated_at: "2025-11-24T03:18:00Z"
-  },
-  {
-    id: 104,
-    name: "AI Forecasting Sandbox",
-    repository: "https://github.com/launcha/ai-forecasting-sandbox",
-    status: "stopped",
-    lastDeployment: null,
-    url: null,
-    service_id: "svc-forecasting",
-    instance_id: null,
-    created_at: "2025-09-12T07:22:00Z",
-    updated_at: "2025-11-10T11:55:00Z"
-  }
-]
-
 export default function Projects() {
   const { state } = useAuth()
   const { toast } = useToast()
   const [searchQuery, setSearchQuery] = useState("")
-  const [projects, setProjects] = useState<Project[]>(MOCK_PROJECTS)
+  const [projects, setProjects] = useState<Project[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [isDeleting, setIsDeleting] = useState<number | null>(null)
   const [selectedProject, setSelectedProject] = useState<Project | null>(null)
@@ -105,7 +54,7 @@ export default function Projects() {
   // 프로젝트 목록 로드
   const loadProjects = useCallback(async () => {
     if (!state.token) {
-      setProjects(MOCK_PROJECTS)
+      setProjects([])
       setIsLoading(false)
       return
     }
@@ -114,19 +63,16 @@ export default function Projects() {
     try {
       const response = await projectsApi.getProjects(state.token)
       const fetchedProjects = response.projects ?? []
-      if (fetchedProjects.length > 0) {
-        setProjects(fetchedProjects)
-      } else {
-        setProjects(MOCK_PROJECTS)
-      }
+      setProjects(fetchedProjects)
     } catch (err: any) {
-      console.warn("프로젝트 로드 실패, mock 데이터 표시", err)
-      setProjects(MOCK_PROJECTS)
+      console.warn("프로젝트 로드 실패", err)
+      setProjects([])
       toast({
         title: "프로젝트 데이터를 불러올 수 없습니다",
         description: err.message
-          ? `${err.message} — 임시 데이터를 표시합니다.`
-          : "백엔드 연결이 없어 임시 데이터를 표시합니다."
+          ? err.message
+          : "백엔드 연결이 없어 프로젝트 목록을 불러오지 못했습니다.",
+        variant: "destructive"
       })
     } finally {
       setIsLoading(false)
