@@ -55,28 +55,31 @@ export default function Predict() {
       const repoSlug = projectData.github_repo_url.replace(/\/$/, "").split("/").pop() || projectData.github_repo_url
       const lastDeployment = deployResponse.deployed_at || new Date().toISOString()
 
-      try {
-        if (state.token) {
-          await projectsApi.createProject(
-            {
-              name: repoSlug,
-              repository: projectData.github_repo_url,
-              status: deployResponse.accepted ? "deployed" : "error",
-              lastDeployment,
-              url: deployResponse.instance?.metadata?.public_url ?? null,
-              service_id: serviceId,
-              instance_id: deployResponse.instance_id ?? null,
-            },
-            state.token
-          )
+      if (state.token) {
+        const persistProjectRecord = async () => {
+          try {
+            await projectsApi.createProject(
+              {
+                name: repoSlug,
+                repository: projectData.github_repo_url,
+                status: deployResponse.accepted ? "deployed" : "error",
+                lastDeployment,
+                url: deployResponse.instance?.metadata?.public_url ?? null,
+                service_id: serviceId,
+                instance_id: deployResponse.instance_id ?? null,
+              },
+              state.token
+            )
+          } catch (projectErr: any) {
+            console.warn("Failed to create project record", projectErr)
+            toast({
+              title: "프로젝트 기록 저장 실패",
+              description: projectErr.message || "생성된 프로젝트 정보를 저장하지 못했습니다.",
+              variant: "destructive",
+            })
+          }
         }
-      } catch (projectErr: any) {
-        console.warn("Failed to create project record", projectErr)
-        toast({
-          title: "프로젝트 기록 저장 실패",
-          description: projectErr.message || "생성된 프로젝트 정보를 저장하지 못했습니다.",
-          variant: "destructive",
-        })
+        void persistProjectRecord()
       }
       const summaryPayload: DeploymentSummaryData = {
         githubUrl: projectData.github_repo_url,
