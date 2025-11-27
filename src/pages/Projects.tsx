@@ -120,14 +120,8 @@ export default function Projects() {
         setProjects(MOCK_PROJECTS)
       }
     } catch (err: any) {
-      console.warn("프로젝트 로드 실패, mock 데이터 표시", err)
+      console.warn("프로젝트 로드 실패, mock 데이터 표시 (토스트 숨김)", err)
       setProjects(MOCK_PROJECTS)
-      toast({
-        title: "프로젝트 데이터를 불러올 수 없습니다",
-        description: err.message
-          ? `${err.message} — 임시 데이터를 표시합니다.`
-          : "백엔드 연결이 없어 임시 데이터를 표시합니다."
-      })
     } finally {
       setIsLoading(false)
     }
